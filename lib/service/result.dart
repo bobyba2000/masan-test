@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:logger/web.dart';
 import 'package:web_test/model/result/model.dart';
 import 'package:web_test/service/local.dart';
 
@@ -10,7 +11,8 @@ class ResultService {
     if (username == null) {
       return;
     }
-    final data = FirebaseDatabase.instance.ref('Result/$username');
+    // final data = FirebaseDatabase.instance.ref('Result/$username');
+    final data = FirebaseDatabase.instance.ref('NewResult/$username');
     data.set(
       jsonDecode(jsonEncode(result.toJson())),
     );
@@ -21,7 +23,8 @@ class ResultService {
     if (username == null) {
       return null;
     }
-    final response = await FirebaseDatabase.instance.ref('Result/$username').get();
+    //final response = await FirebaseDatabase.instance.ref('Result/$username').get();
+    final response = await FirebaseDatabase.instance.ref('NewResult/$username').get();
     if (response.exists) {
       final data = jsonDecode(
         jsonEncode(response.value),
@@ -33,7 +36,8 @@ class ResultService {
   }
 
   Future<List<ResultModel>> getAllResult() async {
-    final response = await FirebaseDatabase.instance.ref('Result').get();
+    // final response = await FirebaseDatabase.instance.ref('Result').get();
+    final response = await FirebaseDatabase.instance.ref('NewResult').get();
     List<ResultModel> res = [];
     if (response.exists) {
       for (var data in response.children) {
@@ -41,6 +45,7 @@ class ResultService {
         final question = ResultModel.fromJson(value);
         res.add(question);
       }
+
     }
     return res;
   }

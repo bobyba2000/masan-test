@@ -4,9 +4,11 @@ part 'model.g.dart';
 
 enum QuestionType {
   numerical,
-  scenario,
+  // scenario,
+  critical,
   verbal,
   logical,
+  
   @JsonValue('Vietnam Market Trends')
   techVMT,
   @JsonValue('Portfolio Strategy')

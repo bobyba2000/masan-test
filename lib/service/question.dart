@@ -4,7 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:web_test/model/question/model.dart';
 
 class QuestionService {
-  final database = FirebaseDatabase.instance.ref('Question');
+  //final database = FirebaseDatabase.instance.ref('Question');
+  final database = FirebaseDatabase.instance.ref('NewQuestion');
   Future<List<QuestionModel>> getTechnicalQuestions() async {
     final technicalDatabase = database.child('Technical');
     final data = await technicalDatabase.get();
@@ -33,14 +34,27 @@ class QuestionService {
     return res;
   }
 
-  Future<List<QuestionModel>> getScenarioQuestion() async {
-    final technicalDatabase = database.child('Scenario');
+  // Future<List<QuestionModel>> getScenarioQuestion() async {
+  //   final technicalDatabase = database.child('Scenario');
+  //   final data = await technicalDatabase.get();
+  //   List<QuestionModel> res = [];
+  //   if (data.exists) {
+  //     for (var data in data.children) {
+  //       final value = jsonDecode(jsonEncode(data.value));
+  //       final question = QuestionModel.fromJson(value)..type = QuestionType.scenario;
+  //       res.add(question);
+  //     }
+  //   }
+  //   return res;
+  // }
+    Future<List<QuestionModel>> getCriticalQuestion() async {
+    final technicalDatabase = database.child('Critical');
     final data = await technicalDatabase.get();
     List<QuestionModel> res = [];
     if (data.exists) {
       for (var data in data.children) {
         final value = jsonDecode(jsonEncode(data.value));
-        final question = QuestionModel.fromJson(value)..type = QuestionType.scenario;
+        final question = QuestionModel.fromJson(value)..type = QuestionType.critical;
         res.add(question);
       }
     }

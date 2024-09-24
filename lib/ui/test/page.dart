@@ -44,7 +44,8 @@ class _TestPageState extends State<TestPage> {
   Future<void> getQuestions() async {
     List<QuestionModel> numericalQuestions = [];
     // List<QuestionModel> technicalQuestions = [];
-    List<QuestionModel> scenarioQuestions = [];
+    // List<QuestionModel> scenarioQuestions = [];
+    List<QuestionModel> criticalQuestions = [];
     List<QuestionModel> logicalQuestions = [];
     List<QuestionModel> verbalQuestions = [];
 
@@ -76,10 +77,14 @@ class _TestPageState extends State<TestPage> {
         //   }
         //   technicalQuestions.shuffle();
         // }.call(),
+        // () async {
+        //   scenarioQuestions = await service.getScenarioQuestion();
+        //   scenarioQuestions = getRandomQuestions(QuestionType.scenario, scenarioQuestions);
+        //   scenarioQuestions.sort((a, b) => (a.scenario ?? '').compareTo(b.scenario ?? ''));
+        // }.call(),
         () async {
-          scenarioQuestions = await service.getScenarioQuestion();
-          scenarioQuestions = getRandomQuestions(QuestionType.scenario, scenarioQuestions);
-          scenarioQuestions.sort((a, b) => (a.scenario ?? '').compareTo(b.scenario ?? ''));
+          criticalQuestions = await service.getCriticalQuestion();
+          criticalQuestions = getRandomQuestions(QuestionType.critical, criticalQuestions);
         }.call(),
       ]);
     } catch (e) {
@@ -88,7 +93,8 @@ class _TestPageState extends State<TestPage> {
       questions = [
         ...numericalQuestions,
         // ...technicalQuestions,
-        ...scenarioQuestions,
+        // ...scenarioQuestions,
+        ...criticalQuestions,
         ...logicalQuestions,
         ...verbalQuestions,
       ];
@@ -506,30 +512,96 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.question.scenario != null)
+        if (widget.question.type == QuestionType.verbal) ...[
           Padding(
-            padding: EdgeInsets.only(bottom: 10.h),
-            child: Text(
-              'Scenario: ${widget.question.scenario}',
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: const Color(0xFF838282),
-                fontStyle: FontStyle.italic,
-              ),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Scenario: ${widget.question.scenario}',
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: const Color(0xFF838282),
+                    fontStyle: FontStyle.italic,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  'Question #${widget.index + 1}:',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  widget.question.question,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 20.h),
+                answer(),
+              ],
             ),
-          ),
+          )
+        ],
 
-        Text(
-          'Question #${widget.index + 1}:',
-          style: TextStyle(
-            fontSize: 22.sp,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 20.h),
-        // if (widget.question.url != null && widget.question.url!.isNotEmpty)
-        Center(
+        if (widget.question.type == QuestionType.critical) ...[
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                SizedBox(height: 10.h),
+                Text(
+                  'Question #${widget.index + 1}:',
+                  style: TextStyle(
+                    fontSize: 22.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  'Statement: ${widget.question.scenario}',
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: const Color(0xFF838282),
+                    fontStyle: FontStyle.italic,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 5.h),
+                Text(
+                  'Argument: ${widget.question.question}',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                SizedBox(height: 20.h),
+                answer(),
+              ],
+            ),
+          )
+        ],
+
+          
+        if(widget.question.url != null && widget.question.url!.isNotEmpty&&widget.question.type==QuestionType.numerical)...[
+          Center(
           child: Builder(builder: (context) {
             final url = widget.question.url;
             RegExp regExp = RegExp(r"/d/([a-zA-Z0-9_-]+)");
@@ -541,14 +613,24 @@ class _QuestionWidgetState extends State<QuestionWidget> {
             if (fileId != null) {
               return Container(
                 padding: EdgeInsets.only(bottom: 10.h),
-                height: 300.h,
-                child: Image.network('https://lh3.googleusercontent.com/d/$fileId'),
+                width: 750.w,
+                child: Image.network(
+                  'https://lh3.googleusercontent.com/d/$fileId',
+                  width: 750.w,
+                  fit: BoxFit.fitWidth,
+                ),
               );
             }
             return Container();
           }),
         ),
-        Text(
+        Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                
+                Text(
           widget.question.question,
           style: TextStyle(
             fontSize: 20.sp,
@@ -557,50 +639,112 @@ class _QuestionWidgetState extends State<QuestionWidget> {
           ),
         ),
         const SizedBox(height: 12),
-        ListView.separated(
-          itemBuilder: (context, index) {
-            final answer = widget.question.answers[index];
-            final isSelected = index == selectedAnswer;
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  selectedAnswer = index;
-                });
-                widget.onSelect.call(index);
-              },
-              child: Row(
-                children: [
-                  Radio<int>(
-                    value: index,
-                    groupValue: selectedAnswer,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedAnswer = index;
-                      });
-                      widget.onSelect.call(index);
-                    },
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      answer.answer,
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
-                        fontSize: 16,
+        answer(),
+              ],
+            ),
+          ),
+        
+        ],
+        if(widget.question.url != null && widget.question.url!.isNotEmpty&&widget.question.type==QuestionType.logical)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Builder(
+                builder: (context) {
+                  final url = widget.question.url;
+                  RegExp regExp = RegExp(r"/d/([a-zA-Z0-9_-]+)");
+                  Match? match = regExp.firstMatch(url ?? '');
+                  String? fileId;
+                  if (match != null && match.groupCount >= 1) {
+                    fileId = match.group(1);
+                  }
+                  if (fileId != null) {
+                    return Container(
+                      padding: EdgeInsets.only(bottom: 10.h),
+                      width: double.infinity,
+                      child: Image.network(
+                        'https://lh3.googleusercontent.com/d/$fileId',
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth,
                       ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ),
+            const SizedBox(
+                width: 16), 
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.question.question,
+                    style: TextStyle(
+                      fontSize: 20.sp,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 12),
+                  answer(),
                 ],
               ),
-            );
-          },
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemCount: widget.question.answers.length,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-        ),
+            ),
+          ],
+        )
+        
       ],
+    );
+  }
+
+  Widget answer() {
+    return ListView.separated(
+      itemBuilder: (context, index) {
+        final answer = widget.question.answers[index];
+        final isSelected = index == selectedAnswer;
+        return InkWell(
+          onTap: () {
+            setState(() {
+              selectedAnswer = index;
+            });
+            widget.onSelect.call(index);
+          },
+          child: Row(
+            children: [
+              Radio<int>(
+                value: index,
+                groupValue: selectedAnswer,
+                onChanged: (value) {
+                  setState(() {
+                    selectedAnswer = index;
+                  });
+                  widget.onSelect.call(index);
+                },
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  answer.answer,
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w400,
+                    fontSize: 16,
+                  ),
+                ),
+              )
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemCount: widget.question.answers.length,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
     );
   }
 }

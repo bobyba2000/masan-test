@@ -17,7 +17,8 @@ class _PointSpectrumWidgetState extends State<PointSpectrumWidget> {
   List<QuestionType> types = [
     QuestionType.logical,
     QuestionType.numerical,
-    QuestionType.scenario,
+    // QuestionType.scenario,
+    QuestionType.critical,
     QuestionType.verbal,
   ];
   @override
@@ -43,7 +44,8 @@ class _PointSpectrumWidgetState extends State<PointSpectrumWidget> {
             Expanded(
               child: CompetencyChartWidget(
                 results: widget.results,
-                type: QuestionType.scenario,
+                // type: QuestionType.scenario,
+                type: QuestionType.critical,
                 maxPoint: 4,
               ),
             ),

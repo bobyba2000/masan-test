@@ -21,7 +21,8 @@ enum TestType {
           QuestionType.techCrossWork: 5,
           QuestionType.techFMCGUndestanding: 0,
           QuestionType.techProblem: 5,
-          QuestionType.scenario: 4
+          // QuestionType.scenario: 4
+          QuestionType.critical:4
         };
       case TestType.assistantBM:
         return {
@@ -34,7 +35,8 @@ enum TestType {
           QuestionType.techCrossWork: 0,
           QuestionType.techFMCGUndestanding: 5,
           QuestionType.techProblem: 4,
-          QuestionType.scenario: 4
+          // QuestionType.scenario: 4
+          QuestionType.critical:4
         };
       case TestType.brandExecutive:
         return {
@@ -47,7 +49,8 @@ enum TestType {
           QuestionType.techCrossWork: 0,
           QuestionType.techFMCGUndestanding: 5,
           QuestionType.techProblem: 4,
-          QuestionType.scenario: 4
+          // QuestionType.scenario: 4
+          QuestionType.critical:4
         };
       case TestType.customType:
         return {
@@ -60,7 +63,8 @@ enum TestType {
           QuestionType.techCrossWork: 0,
           QuestionType.techFMCGUndestanding: 0,
           QuestionType.techProblem: 0,
-          QuestionType.scenario: 4,
+          // QuestionType.scenario: 4,
+          QuestionType.critical:4,
           QuestionType.logical: 10,
           QuestionType.verbal: 6,
         };
