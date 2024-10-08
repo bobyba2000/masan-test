@@ -600,7 +600,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
         ],
 
           
-        if(widget.question.url != null && widget.question.url!.isNotEmpty&&widget.question.type==QuestionType.numerical)...[
+        if(widget.question.type==QuestionType.numerical)...[
           Center(
           child: Builder(builder: (context) {
             final url = widget.question.url;
@@ -645,7 +645,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
           ),
         
         ],
-        if(widget.question.url != null && widget.question.url!.isNotEmpty&&widget.question.type==QuestionType.logical)
+        if(widget.question.type==QuestionType.logical)
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

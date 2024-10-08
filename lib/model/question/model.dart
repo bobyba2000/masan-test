@@ -4,7 +4,7 @@ part 'model.g.dart';
 
 enum QuestionType {
   numerical,
-  // scenario,
+  scenario,
   critical,
   verbal,
   logical,
@@ -40,6 +40,7 @@ class QuestionModel {
     required this.answers,
     this.scenario,
     this.url,
+    
   });
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) => _$QuestionModelFromJson(json);

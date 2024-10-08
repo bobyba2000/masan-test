@@ -27,6 +27,7 @@ Map<String, dynamic> _$QuestionModelToJson(QuestionModel instance) =>
 
 const _$QuestionTypeEnumMap = {
   QuestionType.numerical: 'numerical',
+  QuestionType.scenario: 'scenario',
   QuestionType.critical: 'critical',
   QuestionType.verbal: 'verbal',
   QuestionType.logical: 'logical',
